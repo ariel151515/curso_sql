@@ -1,0 +1,667 @@
+Curso de SQL desde CERO (Completo)
+https://www.youtube.com/watch?v=DFg1V-rO6Pg
+
+
+PK (PRIMARY KEY para el id)
+AI (auto increment)
+
+**********************************************************************
+// Creamos campos a la tabla y sus valores
+-------------------------------------------------------------------------
+INSERT INTO usuarios (nombre,apellido,edad) VALUES ('lUCAS','Dalto','21')
+
+
+// Insertar varios datos
+-------------------------------------------------------------------------
+INSERT INTO usuarios (nombre,apellido,edad) VALUES ('lUCAS','Dalto','21')
+INSERT INTO usuarios (nombre,apellido,edad) 
+VALUES ('Pedro','Jorgelin',26),
+       ('Juan','Alvarez',16),
+       ('Roberto','Ntito',52)
+
+
+// Seleccionar algunos campos
+-------------------------------------------------------------------------
+SELECT apellido, edad FROM usuarios
+
+
+// Seleccionar todos los campos
+-------------------------------------------------------------------------
+SELECT apellido, edad FROM usuarios
+
+
+// Eliminar todos los datos
+------------------------------
+DELETE FROM usuarios
+
+
+// Si ponemos mas de una consulta hay que separarlas por ;
+-------------------------------------------------------------------------
+INSERT INTO usuarios (nombre,apellido,edad)
+VALUES ('lUCAS','Dalto','21');
+
+SELECT * FROM usuarios
+
+**********************************************************************
+
+
+
+
+**********************************************************************
+=> (1:34:19 - Columnas y Alias)
+
+Le cambia LastName AS apellido de forma temporal 
+-----------------------------------------------------------
+SELECT LastName AS apellido FROM Employees
+SELECT LastName AS apellido, FirstName AS nombre  FROM Employees
+
+Devuelve la tablas
+---------------------------------------
+SELECT * FROM Products
+
+Devuelve solo lso rpecios
+--------------------------------------
+SELECT Price FROM Products
+
+Renombro el campo y multiplico el precio
+-------------------------------------------------
+SELECT Price*2 AS precio_doble FROM Products
+SELECT Price, Price*2 AS precio_doble FROM Products
+
+Devulve la suma total de todos los precios con el compo renombrado temporalmente
+-------------------------------------------------------------------
+SELECT SUM(PRICE) AS suma_de_precios FROM Products
+**********************************************************************
+
+
+
+
+**********************************************************************
+=> (1:41:24 - Ordenamiento con ORDER BY)
+
+Ordena por algo, en este caso por precio de forma acendente
+------------------------------------------------------------
+SELECT * FROM Products
+ORDER BY Price
+
+Ordena por algo, en este caso por precio de forma decendente
+------------------------------------------------------------
+SELECT * FROM Products
+ORDER BY Price DESC
+
+Aqui lo ordena de forma alfabetica
+------------------------------------------------------------
+SELECT * FROM Products
+ORDER BY ProductName DESC
+
+Ordena los NULL al final
+------------------------------------------------------------
+SELECT * FROM Products
+ORDER BY ProductName ASC NULLS FIRST
+
+
+Nos ordena todo de forma aleatorea
+--------------------------------------------
+SELECT * FROM Products
+ORDER BY RANDOM()
+
+Ordenamiento por dos campos
+---------------------------------------
+SELECT * FROM Products
+ORDER BY ProductName, SupplierID DESC
+
+
+Elimina todos los null que se repitan y devulve un solo null
+-----------------------------------------------------------
+SELECT DISTINCT ProductName FROM Products
+**********************************************************************
+
+
+
+
+**********************************************************************
+=> (1:56:04 - Cláusula WHERE)
+
+El producto donde el id sea 14
+----------------------------------------------
+SELECT ProductName FROM Products
+WHERE ProductID = 14
+
+
+Devuelve todos los datos del producto por id
+----------------------------------------------
+SELECT * FROM Products
+WHERE ProductID = 14
+
+
+Filtra por nombre
+-------------------------------------
+SELECT * FROM Products
+WHERE ProductName = "Tofu"
+
+
+Productos menor o igual a 40
+---------------------------------
+SELECT * FROM Products
+WHERE Price <= 40
+
+
+Elimina el campor por el id
+--------------------------------
+DELETE FROM turnos_medicos
+WHERE id_turno = 3
+
+
+Modific el horario del turno (ejecutamos la consulta y despues mostramos la tabla)
+------------------------------------------------------------------------------
+UPDATE turnos_medicos SET horario = "10:30"
+WHERE id_turno = 1;
+
+SELECT *  FROM turnos_medicos
+
+
+
+Tambien modificamos el motivo
+---------------------------------------------
+UPDATE turnos_medicos 
+SET horario = "10:30",
+    motivo = "Dolor de muelas"
+WHERE id_turno = 1;
+
+SELECT *  FROM turnos_medicos
+**********************************************************************
+
+
+
+
+**********************************************************************
+=> (2:10:00 - AND, OR y NOT) Operadores de logica
+
+Ponemos dos condiciones para nuestra consulta y nos devuelve un rango de registros
+----------------------------------------------------------------------------------
+SELECT * FROM Customers
+WHERE CustomerID >= 50 AND CustomerID < 55
+
+Cumple una u otra condicion
+---------------------------------------------------------
+SELECT * FROM Employees
+WHERE FirstName = "Nancy" OR FirstName = "Anne"
+
+
+Productos menor a 20 y que sea de catwegoria carne de ave (id= 6)
+---------------------------------------------------------------------
+SELECT * FROM Products 
+WHERE Price < 20 OR CategoryID = 6
+
+
+Productos menor a $20 o con categoria 6 y el proveedor con id 7
+--------------------------------------------------------------------
+SELECT * FROM Products 
+WHERE Price < 20 OR CategoryID = 6 AND SupplierID = 7
+
+
+Lo que esta dentro del parentesis es obligatorio y ademas sea de proveedor 7
+---------------------------------------------------------------------------
+SELECT * FROM Products 
+WHERE (Price < 20 OR CategoryID = 6) AND SupplierID = 7
+
+
+Trae todos los productos menos los que sean menor a $40 (NOT niega la condicion)
+---------------------------------------------------------------------------
+SELECT * FROM Products 
+WHERE NOT Price > 40
+
+
+Nos devuelve todo menos USA
+---------------------------------------------------------------------------
+SELECT * FROM Customers
+WHERE NOT Country = "USA"
+
+
+Devuelve que no sea de USA ni de France
+------------------------------------------
+SELECT * FROM Customers
+WHERE NOT Country = "USA" AND NOT Country = "France"
+
+
+Cumple con multiples condiciones
+---------------------------------------------
+SELECT * FROM Customers
+WHERE CustomerID >= 50
+AND CustomerID < 55
+AND NOT Country = "Germany"
+
+
+Maximo 5 registros que cumplan la condicion con LIMIT 5
+------------------------------------------
+SELECT * FROM Customers
+WHERE CustomerID >= 50
+AND NOT Country = "Germany"
+LIMIT 5
+
+
+Mas de un NOT
+-------------------
+SELECT * FROM Customers
+WHERE CustomerID >= 50
+AND NOT Country = "Germany"
+AND NOT Country = "UK"
+AND NOT Country = "Argentina"
+LIMIT 5
+
+
+No nos muestra ni los productos con categoria 6 y tampoco que sean del proveedor 1
+----------------------------------------------------------------------------------
+SELECT * FROM Products
+WHERE NOT CategoryID = 6 AND NOT SupplierID = 1
+
+
+Mas condiciones
+---------------------------------------------------------------------
+SELECT * FROM Products
+WHERE NOT CategoryID = 6
+AND NOT SupplierID = 1
+AND Price <= 340
+
+
+Mas condiciones con LIMIT 
+------------------------------------
+SELECT * FROM Products
+WHERE NOT CategoryID = 6
+AND NOT SupplierID = 1
+AND Price <= 340
+LIMIT 3
+
+
+Tira resultados a granel
+------------------------------------
+SELECT * FROM Products
+WHERE NOT CategoryID = 6
+AND NOT SupplierID = 1
+AND Price <= 340
+ORDER BY RANDOM()
+LIMIT 3
+
+**********************************************************************
+
+
+
+**********************************************************************
+=> (2:49:25 - Operador Between) Operadores de logica - sirbe para buscar fechas
+    solo funciona con tipo de datos compatibles
+
+Productos entre 20 y 40
+----------------------------------------------------
+SELECT * FROM Products WHERE Price BETWEEN 20 AND 40 CategoryID =  6
+
+tiene que valer entre 20 y 40 y tiene que ser de la categoria ID 6
+-----------------------------------------------------------------------
+SELECT * FROM Products WHERE Price BETWEEN 20 AND 40 AND CategoryID =  6
+
+
+Empleados que nacieron entre tal y tal fecha
+-----------------------------------------------------------------------
+SELECT * FROM Employees WHERE BirthDate BETWEEN "1960-0-1" AND "1970-0-1"
+
+**********************************************************************
+
+
+
+**********************************************************************
+=> (2:59:09 - Operador LIKE ) Es igual que un like pero con caracteres especiales
+    tambien se puede conbinar con el not
+
+Tiene que haber una r al final
+-----------------------------------------------------------------------
+SELECT * FROM Employees WHERE LastName LIKE "%r"
+
+Aarranca con una f
+-----------------------------------------------------------------------
+SELECT * FROM Employees WHERE LastName LIKE "f%"
+
+Con que tenga un f esta todo bien
+------------------------------------------------
+SELECT * FROM Employees WHERE LastName LIKE "%f%"
+**********************************************************************
+
+
+
+**********************************************************************
+=> (3:08:36 - IS NULL & IS NOT NULL)
+
+Devolveme los valores que no sean nulos
+------------------------------------------------
+SELECT * FROM Products
+WHERE ProductName IS NULL
+ORDER BY ProductName ASC
+
+**********************************************************************
+
+
+**********************************************************************
+=> (3:12:19 - Operador IN y NOT IN)
+
+
+Devuelve la cantidad de proveedores de una forma mas abreviada en lugar de utilizar el OR
+------------------------------------------------------------------------------------------
+SELECT * FROM Products
+WHERE SupplierID IN (3,4,5,6)
+
+
+// Usar esto:
+
+SELECT * FROM Employees
+WHERE LastName in ("Fuller","King")
+---------------------------------
+
+// En lugar de esto:
+
+SELECT * FROM Employees
+WHERE LastName = "Fuller"
+OR LastName = "King"
+
+
+// Con negacion:
+
+SELECT * FROM Employees
+WHERE LastName IN ("Fuller","King")
+
+**********************************************************************
+
+
+
+- SECCIÓN INTERMEDIA 
+**********************************************************************
+=> (3:17:40 - Funciones de Agregación)
+
+
+Me devuelve la cantidad de empleados en numero
+---------------------------------------------
+SELECT count(firstName) FROM Employees
+
+
+Tambien le asignamos un valor a la coumna temporal
+---------------------------------------------------
+SELECT count(firstName) AS Cantidad_de_nombres FROM Employees
+
+
+Suma el valor d ecada precio
+---------------------------------------------------
+SELECT SUM(Price) FROM Products
+
+
+El precio promedio
+-----------------------------------------
+SELECT AVG(Price) FROM Products
+
+
+Redondea los precios
+-----------------------------------
+SELECT ROUND(Price) FROM Products
+
+
+Redondea el promediode precios
+-----------------------------------
+SELECT ROUND(AVG(Price)) FROM Products
+
+
+Tambien le asignamos un nombre a  la columna con as (nos da el resultado con un decimal y pueden ser mas de 1 o 0)
+------------------------------------------------------------------------
+SELECT ROUND(AVG(Price), 1) as promedio FROM Products
+
+----------------------------------------------------
+SELECT ROUND(n1, n2) as promedio FROM Products
+
+
+El -- son comentarios
+-------------------------------------------------
+SELECT ProductName, MIN(Price) FROM Products
+-- WHERE ProductName IS NOT NULL
+
+
+Devuelve productos con el precio maximo  y que no sea null
+---------------------------------------------------------------
+SELECT ProductName, MAX(Price) FROM Products
+WHERE ProductName IS NOT NULL
+
+
+(GROUP BY PRODUCTO) Los campos que tienen el mismo valor se agrupan
+-------------------------------------------------------------------
+SELECT ProductName, ROUND(AVG(Price)) as promedio FROM Products
+GROUP BY CategoryID
+
+
+Para trabajar con condicion en una funcion de agregacion (ROUND(AVG(Price))) se usa el HAVING y no el WHERE
+--------------------------------------------------------------------------------------------------------
+SELECT ProductName, ROUND(AVG(Price)) as promedio FROM Products
+GROUP BY CategoryID
+HAVING promedio > 40 
+
+
+Esto si es posible
+------------------------------------
+SELECT ProductName, ROUND(AVG(Price)) as promedio FROM Products
+WHERE CategoryID IS NOT NULL
+GROUP BY CategoryID
+HAVING promedio > 40 
+
+
+Para sacar el producto que mas se vendio
+------------------------------------------
+SELECT ProductID, SUM(Quantity) as Total FROM OrderDetails 
+GROUP BY ProductID
+HAVING total < 50
+ORDER BY Total DESC
+LIMIT 1
+
+
+El producto que menos se vendio
+------------------------------------------
+SELECT ProductID, SUM(Quantity) as Total FROM OrderDetails 
+GROUP BY ProductID
+HAVING total < 50
+ORDER BY Total ASC
+LIMIT 1
+
+**********************************************************************
+
+
+- SECCIÓN INTERMEDIA 
+**********************************************************************
+=> (3:49:17 - Subconsultas (subqueries)
+
+
+De esta forma puedo saber el nombre de un product ID
+------------------------------------------------------
+SELECT ProductID, Quantity FROM OrderDetails
+SELECT ProductName FROM Products WHERE ProductID = 11
+
+
+Obtenemos el nombre del producto por ID con una subconsulta
+------------------------------------------------------
+SELECT ProductID, 
+       Quantity,
+       (SELECT ProductName FROM Products) 
+FROM OrderDetails
+
+
+Tambien le agregamos un nombre con (as Nombre)
+------------------------------------------------------
+SELECT ProductID, 
+       Quantity,
+       (SELECT ProductName FROM Products) as Nombre
+FROM OrderDetails
+
+
+Se le puede agregar mas de una subconsulta
+------------------------------------------------------
+SELECT ProductID, 
+       Quantity,
+       (SELECT ProductName FROM Products),
+       (SELECT CategoryID FROM Products)
+FROM OrderDetails
+
+
+Le decimos: Seleccioname el ProductID y la Quantity de OrderDetails
+pero con el SELECT de la subconsulyta le decimos ademas seleccioname ProductName de la tabla
+Products donde OrderDetails.ProductID sea igual a ProductID y le ponemos el alias Nombre
+---------------------------------------------------------------------------------------
+SELECT ProductID, 
+       Quantity,
+       (SELECT ProductName FROM Products WHERE OrderDetails.ProductID = ProductID) as Nombre
+FROM OrderDetails
+
+
+Aca le cambiamos el nombre de la tabla de OrderDetails a OD
+-----------------------------------------------------------
+SELECT ProductID, 
+       Quantity,
+       (SELECT ProductName FROM Products WHERE OD.ProductID = ProductID) as Nombre
+FROM OrderDetails AS OD
+
+
+
+4:39:14 - Joins (Se usa para combinar informacion de dos tablas y devolver la 
+informacion en una sola tabla)
+------------------------------------------------------------------------
+SELECT * FROM Employees e, Orders o
+WHERE e.EmployeeID = o.EmployeeID
+
+SELECT LastName, FirstName, OrderID FROM Employees e
+INNER JOIN Orders o ON e.EmployeeID = o.EmployeeID
+
+
+Asi se crean las tablas
+------------------------------------------------------------------------
+CREATE TABLE "Rewards" (
+"RewardID" INTEGER,
+"EmployeeID" INTEGER,
+"Reward" INTEGER,
+"Month" TEXT,
+PRIMARY KEY("RewardID" AUTOINCREMENT)
+)
+
+
+
+Asi AGREGAN VALORES y se insertan campos
+------------------------------------------------------------------------
+INSERT INTO Rewards (EmployeeID,Reward,Month) VALUES
+
+(3,200,"jANUARY"),
+(2,180,"February"),
+(5,250,"March"),
+(1,280,"April"),
+(8,160,"May"),
+(null,null,"June"),
+
+
+Nombre premio y mes
+-------------------------------------------------------------
+SELECT FirstName, Reward, Month FROM Employees e
+INNER JOIN Rewards r ON e.EmployeeID = r.EmployeeID
+
+
+-------------------------------------------------------------
+SELECT FirstName, Reward, Month FROM Employees e
+LEFT JOIN Rewards r ON e.EmployeeID = r.EmployeeID
+
+
+(Full JOIN)
+Devuelve la tabla completa indicando quen gano premio y quien no
+-------------------------------------------------------------------
+SELECT FirstName, Reward, Month FROM Employees e
+LEFT JOIN Rewards r ON e.EmployeeID = r.EmployeeID
+
+UNION
+
+SELECT FirstName, Reward, Month FROM Employees e
+LEFT JOIN Rewards r ON e.EmployeeID = r.EmployeeID
+
+
+Devuelve la tabla completa indicando quen gano premio y quien no
+-------------------------------------------------------------------
+SELECT FirstName, Reward, Month FROM Employees e
+LEFT JOIN Rewards r ON e.EmployeeID = r.EmployeeID
+
+UNION all
+
+SELECT FirstName, Reward, Month FROM Employees e
+LEFT JOIN Rewards r ON e.EmployeeID = r.EmployeeID
+
+
+Cardinalidad 
+-------------------------------------------------------------------
+5:19:15 - Cardinalidad 
+
+
+Normalización
+-------------------------------------------------------------------
+5:39:00 - Normalización
+- Tiene que ver con la cantidad de tablas y la fomra de relacionarlas
+entre si.
+
+
+Crea indices unicos (Hace que cada campo no se duplique)
+-------------------------------------------------------------------
+CREATE UNIQUE INDEX name ON Employees (FirstName)
+
+
+Indices compuestos
+-------------------------------------------------------------------
+CREATE UNIQUE INDEX name ON Employees (FirstName, LastName)
+
+
+Vistas (Son vistas que se almacenan en forma de tablas pero no son tablas)
+------------------------------------------------------------------------
+6:15:28 - Vistas 
+
+
+6:21:18 - Bloqueos y transacciones 
+------------------------------------------------------------------------
+BEGIN;
+
+UPDATE Products SET ProductName = "pezon" WHERE ProductName = "Chais"
+
+
+BEGIN;
+
+UPDATE Products SET ProductName = "pezon" WHERE ProductName = "Chais";
+
+ROLLBACK   -> // Con el ROLLBACK vuelve para atras y se desace todo lo que se hizo
+
+--------------------------------------------------------------------------
+
+
+6:31:44 - Procedimientos almacenados 
+------------------------------------------------------------------------
+
+
+**********************************************************************
+
+
+
+Estas tirando veneno Frenanda, quine te enseño eso tus  tias? jajjaa
+
+
+
+
+
+
+España va por el camino de Argentina https://www.youtube.com/watch?v=toIDR3cv82s
+
+----------------------------------------------------------------
+El infierno es un lugar fisico donde las almas son atormentadas?
+https://www.youtube.com/watch?v=XSb9BLpv_Qo
+
+
+
+
+
+
+
+
+
+
+
+
+
